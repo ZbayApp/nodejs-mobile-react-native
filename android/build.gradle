@@ -76,10 +76,11 @@ android {
     }
 
     sourceSets {
-        main {
-            jniLibs.srcDirs 'libnode/bin/'
-        }
         main.assets.srcDirs += '../install/resources/nodejs-modules'
+    }
+
+    packagingOptions {
+        pickFirst '**/*.so'
     }
 
     lintOptions {
