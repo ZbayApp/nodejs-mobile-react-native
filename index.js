@@ -40,18 +40,18 @@ class MessageCodec {
 /**
  * Channel super class.
  */
-class ChannelSuper extends EventEmitter {
-  constructor(name) {
-    super();
-    this.name = name;
-    // Renaming the 'emit' method to 'emitLocal' is not strictly needed, but
-    // it is useful to clarify that 'emitting' on this object has a local
-    // scope: it emits the event on the Node side only, it doesn't send
-    // the event to React Native.
-    this.emitLocal = this.emit;
-    delete this.emit;
-  };
-};
+// class ChannelSuper extends EventEmitter {
+//   constructor(name) {
+//     super();
+//     this.name = name;
+//     // Renaming the 'emit' method to 'emitLocal' is not strictly needed, but
+//     // it is useful to clarify that 'emitting' on this object has a local
+//     // scope: it emits the event on the Node side only, it doesn't send
+//     // the event to React Native.
+//     this.emitLocal = this.emit;
+//     delete this.emit;
+//   };
+// };
 
 
 const { RNNodeJsMobile } = NativeModules;
@@ -63,22 +63,22 @@ const { RNNodeJsMobile } = NativeModules;
  * Sending functions is not currently supported.
  * Includes the previously available 'send' method for 'message' events.
  */
-class EventChannel extends ChannelSuper {
-  post(event, ...msg) {
-    RNNodeJsMobile.sendMessage(this.name, MessageCodec.serialize(event, ...msg));
-  };
+// class EventChannel extends ChannelSuper {
+//   post(event, ...msg) {
+//     RNNodeJsMobile.sendMessage(this.name, MessageCodec.serialize(event, ...msg));
+//   };
 
-  // Posts a 'message' event, to be backward compatible with old code.
-  send(...msg) {
-    this.post('message', ...msg);
-  };
+//   // Posts a 'message' event, to be backward compatible with old code.
+//   send(...msg) {
+//     this.post('message', ...msg);
+//   };
 
-  processData(data) {
-    // The data contains the serialized message envelope.
-    var envelope = MessageCodec.deserialize(data);
-    this.emitLocal(envelope.event, ...(envelope.payload));
-  };
-};
+//   processData(data) {
+//     // The data contains the serialized message envelope.
+//     var envelope = MessageCodec.deserialize(data);
+//     this.emitLocal(envelope.event, ...(envelope.payload));
+//   };
+// };
 
 const start=function(mainFileName, options) {
   if (typeof mainFileName !== 'string') {
@@ -108,17 +108,17 @@ NativeAppEventEmitter.addListener("nodejs-mobile-react-native-message",
   }
 );
 
-function registerChannel(channel) {
-  channels[channel.name] = channel;
-};
+// function registerChannel(channel) {
+//   channels[channel.name] = channel;
+// };
 
-const eventChannel = new EventChannel(EVENT_CHANNEL);
-registerChannel(eventChannel);
+// const eventChannel = new EventChannel(EVENT_CHANNEL);
+// registerChannel(eventChannel);
 
 const export_object = {
   start: start,
   startWithScript: startWithScript,
-  channel: eventChannel
+  // channel: eventChannel
 };
 
 module.exports = export_object;
