@@ -1,5 +1,5 @@
 {
-  "name": "@zbayapp/nodejs-mobile-react-native",
+  "name": "zbayapp-nodejs-mobile-react-native",
   "version": "0.8.0",
   "description": "Node.js for Mobile Apps React Native plugin",
   "main": "index.js",
