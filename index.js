@@ -87,6 +87,13 @@ const start=function(mainFileName, options) {
   options = options || {};
   RNNodeJsMobile.startNodeProject(mainFileName, options);
 };
+const startWithArgs=function(mainFileName, args, options) {
+  if (typeof mainFileName !== 'string') {
+    throw new Error('nodejs-mobile-react-native\'s start expects to receive the main .js entrypoint filename, e.g.: nodejs.start("main.js");');
+  }
+  options = options || {};
+  RNNodeJsMobile.startNodeProjectWithArgs(mainFileName, options, args);
+};
 const startWithScript=function(script, options) {
   options = options || {};
   RNNodeJsMobile.startNodeWithScript(script, options);
@@ -117,6 +124,7 @@ NativeAppEventEmitter.addListener("nodejs-mobile-react-native-message",
 
 const export_object = {
   start: start,
+  startWithArgs: startWithArgs,
   startWithScript: startWithScript,
   // channel: eventChannel
 };
