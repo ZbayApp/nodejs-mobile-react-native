@@ -1,6 +1,6 @@
 {
   "name": "zbayapp-nodejs-mobile-react-native",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "Node.js for Mobile Apps React Native plugin",
   "main": "index.js",
   "scripts": {
