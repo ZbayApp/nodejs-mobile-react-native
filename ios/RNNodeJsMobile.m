@@ -104,21 +104,23 @@ RCT_EXPORT_METHOD(sendMessage:(NSString *)channelName:(NSString *)message)
 -(void)callStartNodeProjectWithArgs:(NSDictionary *)dict
 {
   NSString* srcPath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@/%@", NODEJS_PROJECT_RESOURCE_PATH, dict[@"mainFileName"]] ofType:@""];
-  NSArray* nodeArguments = nil;
+  NSMutableArray* nodeArguments = nil;
 
   NSString* dlopenoverridePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@/%@", NODEJS_PROJECT_RESOURCE_PATH, NODEJS_DLOPEN_OVERRIDE_FILENAME] ofType:@""];
   // Check if the file to override dlopen lookup exists, for loading native modules from the Frameworks.
   if(!dlopenoverridePath)
   {
-    nodeArguments = [NSArray arrayWithObjects:
+    nodeArguments = [NSMutableArray arrayWithObjects:
                               @"node",
                               srcPath,
                               ];
+
     [nodeArguments addObjectsFromArray:dict[@"args"]];
+    
     [nodeArguments addObject:nil];
 
   } else {
-    nodeArguments = [NSArray arrayWithObjects:
+    nodeArguments = [NSMutableArray arrayWithObjects:
                               @"node",
                               @"-r",
                               dlopenoverridePath,
@@ -163,29 +165,29 @@ RCT_EXPORT_METHOD(startNodeProject:(NSString *)mainFileName options:(NSDictionar
   }
 }
 
-RCT_EXPORT_METHOD(startNodeProjectWithArgs:(NSString *)mainFileName options:(NSDictionary *)options, args:(NSString)args, ...)
+RCT_EXPORT_METHOD(startNodeProjectWithArgs:(NSString *)mainFileName options:(NSDictionary *)options args:(NSArray *)args)
 {
   if(![NodeRunner sharedInstance].startedNodeAlready)
   {
-    NSMutableArray * arguments = [NSMutableArray array];
-    if(args)
-    {
-      [arguments addObject:args];
-      id argument;
-      va_list argsList;
-      va_start(argsList, args);
-      while(argument = va_arg(argsList, NSString))
-      {
-        [arguments addObject:argument];
-      }
-      va_end(argsList);
-    }
+    // NSMutableArray * arguments = [NSMutableArray array];
+    // if(args)
+    // {
+    //   [arguments addObject:args];
+    //   id argument;
+    //   va_list argsList;
+    //   va_start(argsList, args);
+    //   while(argument = va_arg(argsList, NSString))
+    //   {
+    //     [arguments addObject:argument];
+    //   }
+    //   va_end(argsList);
+    // }
     [NodeRunner sharedInstance].startedNodeAlready=true;
     NSThread* nodejsThread = nil;
     nodejsThread = [[NSThread alloc]
       initWithTarget:self
       selector:@selector(callStartNodeProjectWithArgs:)
-      object:@{@"mainFileName":@mainFileName,@"args":@arguments}
+      object:@{@"mainFileName":mainFileName,@"args":args}
     ];
     // Set 2MB of stack space for the Node.js thread.
     [nodejsThread setStackSize:2*1024*1024];
