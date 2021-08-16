@@ -110,13 +110,10 @@ RCT_EXPORT_METHOD(sendMessage:(NSString *)channelName:(NSString *)message)
   // Check if the file to override dlopen lookup exists, for loading native modules from the Frameworks.
   if(!dlopenoverridePath)
   {
-    nodeArguments = [NSMutableArray arrayWithObjects:
-                              @"node",
-                              srcPath,
-                              ];
+    nodeArguments = [NSMutableArray arrayWithObjects:@"node", srcPath];
 
     [nodeArguments addObjectsFromArray:dict[@"args"]];
-    
+
     [nodeArguments addObject:nil];
 
   } else {
