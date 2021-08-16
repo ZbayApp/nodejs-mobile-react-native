@@ -31,7 +31,7 @@ find "$CODESIGNING_FOLDER_PATH/nodejs-project/" -path "*/*.framework/*" -delete
 find "$CODESIGNING_FOLDER_PATH/nodejs-project/" -name "*.framework" -type d -delete
 # Apply patches to the modules package.json
 if [ -d "$CODESIGNING_FOLDER_PATH"/nodejs-project/node_modules/ ]; then
-  PATCH_SCRIPT_DIR="$( cd "$PROJECT_DIR" && cd ../node_modules/nodejs-mobile-react-native/scripts/ && pwd )"
+  PATCH_SCRIPT_DIR="$( cd "$PROJECT_DIR" && cd ../node_modules/zbayapp-nodejs-mobile-react-native/scripts/ && pwd )"
   NODEJS_PROJECT_MODULES_DIR="$( cd "$CODESIGNING_FOLDER_PATH" && cd nodejs-project/node_modules/ && pwd )"
   node "$PATCH_SCRIPT_DIR"/patch-package.js $NODEJS_PROJECT_MODULES_DIR
 fi
@@ -39,7 +39,7 @@ fi
 if [ -d "$PROJECT_DIR/../node_modules/nodejs-mobile-gyp/" ]; then
   NODEJS_MOBILE_GYP_DIR="$( cd "$PROJECT_DIR" && cd ../node_modules/nodejs-mobile-gyp/ && pwd )"
 else
-  NODEJS_MOBILE_GYP_DIR="$( cd "$PROJECT_DIR" && cd ../node_modules/nodejs-mobile-react-native/node_modules/nodejs-mobile-gyp/ && pwd )"
+  NODEJS_MOBILE_GYP_DIR="$( cd "$PROJECT_DIR" && cd ../node_modules/zbayapp-nodejs-mobile-react-native/node_modules/nodejs-mobile-gyp/ && pwd )"
 fi
 NODEJS_MOBILE_GYP_BIN_FILE="$NODEJS_MOBILE_GYP_DIR"/bin/node-gyp.js
 # Support building neon-bindings (Rust) native modules

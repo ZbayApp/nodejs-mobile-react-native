@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 NODEJS_ASSETS_DIR="$( cd "$PROJECT_DIR" && cd ../nodejs-assets/ && pwd )"
-NODEJS_BUILT_IN_MODULES_DIR="$( cd "$PROJECT_DIR" && cd ../node_modules/nodejs-mobile-react-native/install/resources/nodejs-modules/ && pwd )"
+NODEJS_BUILT_IN_MODULES_DIR="$( cd "$PROJECT_DIR" && cd ../node_modules/zbayapp-nodejs-mobile-react-native/install/resources/nodejs-modules/ && pwd )"
 if [ -d "$CODESIGNING_FOLDER_PATH/nodejs-project/" ]
 then
 rm -rf "$CODESIGNING_FOLDER_PATH/nodejs-project/"
