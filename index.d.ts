@@ -2,23 +2,14 @@ declare module "zbayapp-nodejs-mobile-react-native" {
   export interface NodeJs {
     /**
      * Starts the nodejs-mobile runtime thread with a file inside the nodejs-project directory
-     * @param scriptFileName 
-     * @param options 
-     */
-    start: (scriptFileName: string, options?: StartupOptions) => void
-    /**
-     * Starts the nodejs-mobile runtime thread with provided arguments
      * @param scriptFileName
-     * @param options
-     * @param args
      */
-    startWithArgs: (scriptFileName: string, options?: StartupOptions, ...args: string[]) => void
+    start: (scriptFileName: string) => void
     /**
      * Starts the nodejs-mobile runtime thread with a script body
-     * @param scriptBody 
-     * @param options 
+     * @param scriptBody
      */
-    startWithScript: (scriptBody: string, options?: StartupOptions) => void
+    startWithScript: (scriptBody: string) => void
     channel: Channel;
   }
   export interface Channel {
@@ -63,13 +54,6 @@ declare module "zbayapp-nodejs-mobile-react-native" {
    * @param arg can be of type: `boolean`, `number`, `string`, `object`, or `array`
    */
   export type ChannelCallback = (...arg: any[]) => void
-
-  /**
-   * Optional options for `start` and `startWithScript`
-   */
-  export interface StartupOptions {
-    redirectOutputToLogcat?: boolean
-  }
 
   const nodejs: NodeJs
 

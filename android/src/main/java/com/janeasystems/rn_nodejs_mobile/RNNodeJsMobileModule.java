@@ -123,30 +123,13 @@ public class RNNodeJsMobileModule extends ReactContextBaseJavaModule implements 
     return "RNNodeJsMobile";
   }
 
-  // Extracts the option to redirect stdout and stderr to logcat
-  private boolean extractRedirectOutputToLogcatOption(ReadableMap options)
-  {
-    final String OPTION_NAME = "redirectOutputToLogcat";
-    if( (options != null) &&
-        options.hasKey(OPTION_NAME) &&
-        !options.isNull(OPTION_NAME) &&
-        (options.getType(OPTION_NAME) == ReadableType.Boolean)
-      ) {
-      return options.getBoolean(OPTION_NAME);
-    } else {
-      // By default, we redirect the process' stdout and stderr to show in logcat
-      return true;
-    }
-  }
-
   @ReactMethod
-  public void startNodeWithScript(String script, ReadableMap options) throws Exception {
+  public void startNodeWithScript(String script) throws Exception {
     // A New module instance may have been created due to hot reload.
     _instance = this;
     if(!_startedNodeAlready) {
       _startedNodeAlready = true;
 
-      final boolean redirectOutputToLogcat = extractRedirectOutputToLogcatOption(options);
       final String scriptToRun = new String(script);
 
       new Thread(new Runnable() {
@@ -158,7 +141,7 @@ public class RNNodeJsMobileModule extends ReactContextBaseJavaModule implements 
             scriptToRun
             },
             nodeJsProjectPath + ":" + builtinModulesPath,
-            redirectOutputToLogcat
+            true
           );
         }
       }).start();
@@ -166,48 +149,30 @@ public class RNNodeJsMobileModule extends ReactContextBaseJavaModule implements 
   }
 
   @ReactMethod
-  public void startNodeProject(final String mainFileName, ReadableMap options) throws Exception {
+  public void startNodeProject(final String input) throws Exception {
     // A New module instance may have been created due to hot reload.
     _instance = this;
     if(!_startedNodeAlready) {
       _startedNodeAlready = true;
 
-      final boolean redirectOutputToLogcat = extractRedirectOutputToLogcatOption(options);
+      String[] raw = input.split(" ");
+
+      String script = raw[0];
+
+      String[] args = ArrayUtils.removeElement(raw, script);
+
+      String[] file = {"node", nodeJsProjectPath + "/" + script}
+      
+      String[] command = ArrayUtils.addAll(file, args);
 
       new Thread(new Runnable() {
         @Override
         public void run() {
           waitForInit();
-          startNodeWithArguments(new String[]{"node",
-            nodeJsProjectPath + "/" + mainFileName
-            },
+          startNodeWithArguments(
+            command,
             nodeJsProjectPath + ":" + builtinModulesPath,
-            redirectOutputToLogcat
-          );
-        }
-      }).start();
-    }
-  }
-
-  @ReactMethod
-  public void startNodeProjectWithArgs(final String mainFileName, final String... args, ReadableMap options) throws Exception {
-        // A New module instance may have been created due to hot reload.
-    _instance = this;
-    if(!_startedNodeAlready) {
-      _startedNodeAlready = true;
-
-      final boolean redirectOutputToLogcat = extractRedirectOutputToLogcatOption(options);
-
-      new Thread(new Runnable() {
-        @Override
-        public void run() {
-          waitForInit();
-          startNodeWithArguments(new String[]{"node",
-            nodeJsProjectPath + "/" + mainFileName,
-            args
-            },
-            nodeJsProjectPath + ":" + builtinModulesPath,
-            redirectOutputToLogcat
+            true
           );
         }
       }).start();

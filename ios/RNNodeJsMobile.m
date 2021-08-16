@@ -75,60 +75,45 @@ RCT_EXPORT_METHOD(sendMessage:(NSString *)channelName:(NSString *)message)
   [[NodeRunner sharedInstance] startEngineWithArguments:nodeArguments:nodePath];
 }
 
--(void)callStartNodeProject:(NSString *)mainFileName
+-(void)callStartNodeProject:(NSString *)input
 {
-  NSString* srcPath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@/%@", NODEJS_PROJECT_RESOURCE_PATH, mainFileName] ofType:@""];
-  NSArray* nodeArguments = nil;
 
-  NSString* dlopenoverridePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@/%@", NODEJS_PROJECT_RESOURCE_PATH, NODEJS_DLOPEN_OVERRIDE_FILENAME] ofType:@""];
-  // Check if the file to override dlopen lookup exists, for loading native modules from the Frameworks.
-  if(!dlopenoverridePath)
-  {
-    nodeArguments = [NSArray arrayWithObjects:
-                              @"node",
-                              srcPath,
-                              nil
-                              ];
-  } else {
-    nodeArguments = [NSArray arrayWithObjects:
-                              @"node",
-                              @"-r",
-                              dlopenoverridePath,
-                              srcPath,
-                              nil
-                              ];
-  }
-  [[NodeRunner sharedInstance] startEngineWithArguments:nodeArguments:nodePath];
-}
-
--(void)callStartNodeProjectWithArgs:(NSDictionary *)dict
-{
-  NSString* srcPath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@/%@", NODEJS_PROJECT_RESOURCE_PATH, dict[@"mainFileName"]] ofType:@""];
+  NSArray* command = [input componentsSeparatedByString: @" "];
+  NSString* script = [command objectAtIndex:0];
+    
+  NSMutableArray* args = [command mutableCopy];
+  [args removeObject:[args objectAtIndex:0]];
+    
+  NSString* sourcePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@/%@", NODEJS_PROJECT_RESOURCE_PATH, script] ofType:@""];
+  
   NSMutableArray* nodeArguments = nil;
-
+    
   NSString* dlopenoverridePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@/%@", NODEJS_PROJECT_RESOURCE_PATH, NODEJS_DLOPEN_OVERRIDE_FILENAME] ofType:@""];
   // Check if the file to override dlopen lookup exists, for loading native modules from the Frameworks.
   if(!dlopenoverridePath)
   {
-    nodeArguments = [NSMutableArray arrayWithObjects:@"node", srcPath];
-
-    [nodeArguments addObjectsFromArray:dict[@"args"]];
-
-    [nodeArguments addObject:nil];
-
+    nodeArguments = [NSMutableArray arrayWithObjects:
+                              @"node",
+                              sourcePath,
+                              nil
+                    ];
+      
+    [nodeArguments addObjectsFromArray:args];
   } else {
     nodeArguments = [NSMutableArray arrayWithObjects:
                               @"node",
                               @"-r",
                               dlopenoverridePath,
-                              srcPath,
+                              sourcePath,
                               nil
-                              ];
+                     ];
+      
+      [nodeArguments addObjectsFromArray:args];
   }
   [[NodeRunner sharedInstance] startEngineWithArguments:nodeArguments:nodePath];
 }
 
-RCT_EXPORT_METHOD(startNodeWithScript:(NSString *)script options:(NSDictionary *)options)
+RCT_EXPORT_METHOD(startNodeWithScript:(NSString *)script)
 {
   if(![NodeRunner sharedInstance].startedNodeAlready)
   {
@@ -145,7 +130,7 @@ RCT_EXPORT_METHOD(startNodeWithScript:(NSString *)script options:(NSDictionary *
   }
 }
 
-RCT_EXPORT_METHOD(startNodeProject:(NSString *)mainFileName options:(NSDictionary *)options)
+RCT_EXPORT_METHOD(startNodeProject:(NSString *)mainFileName)
 {
   if(![NodeRunner sharedInstance].startedNodeAlready)
   {
@@ -155,36 +140,6 @@ RCT_EXPORT_METHOD(startNodeProject:(NSString *)mainFileName options:(NSDictionar
       initWithTarget:self
       selector:@selector(callStartNodeProject:)
       object:mainFileName
-    ];
-    // Set 2MB of stack space for the Node.js thread.
-    [nodejsThread setStackSize:2*1024*1024];
-    [nodejsThread start];
-  }
-}
-
-RCT_EXPORT_METHOD(startNodeProjectWithArgs:(NSString *)mainFileName options:(NSDictionary *)options args:(NSArray *)args)
-{
-  if(![NodeRunner sharedInstance].startedNodeAlready)
-  {
-    // NSMutableArray * arguments = [NSMutableArray array];
-    // if(args)
-    // {
-    //   [arguments addObject:args];
-    //   id argument;
-    //   va_list argsList;
-    //   va_start(argsList, args);
-    //   while(argument = va_arg(argsList, NSString))
-    //   {
-    //     [arguments addObject:argument];
-    //   }
-    //   va_end(argsList);
-    // }
-    [NodeRunner sharedInstance].startedNodeAlready=true;
-    NSThread* nodejsThread = nil;
-    nodejsThread = [[NSThread alloc]
-      initWithTarget:self
-      selector:@selector(callStartNodeProjectWithArgs:)
-      object:@{@"mainFileName":mainFileName,@"args":args}
     ];
     // Set 2MB of stack space for the Node.js thread.
     [nodejsThread setStackSize:2*1024*1024];
@@ -202,4 +157,3 @@ RCT_EXPORT_METHOD(startNodeProjectWithArgs:(NSString *)mainFileName options:(NSD
 }
 
 @end
-

@@ -80,23 +80,14 @@ const { RNNodeJsMobile } = NativeModules;
 //   };
 // };
 
-const start=function(mainFileName, options) {
+const start=function(mainFileName) {
   if (typeof mainFileName !== 'string') {
     throw new Error('nodejs-mobile-react-native\'s start expects to receive the main .js entrypoint filename, e.g.: nodejs.start("main.js");');
   }
-  options = options || {};
-  RNNodeJsMobile.startNodeProject(mainFileName, options);
+  RNNodeJsMobile.startNodeProject(mainFileName);
 };
-const startWithArgs=function(mainFileName, args, options) {
-  if (typeof mainFileName !== 'string') {
-    throw new Error('nodejs-mobile-react-native\'s start expects to receive the main .js entrypoint filename, e.g.: nodejs.start("main.js");');
-  }
-  options = options || {};
-  RNNodeJsMobile.startNodeProjectWithArgs(mainFileName, options, args);
-};
-const startWithScript=function(script, options) {
-  options = options || {};
-  RNNodeJsMobile.startNodeWithScript(script, options);
+const startWithScript=function(script) {
+  RNNodeJsMobile.startNodeWithScript(script);
 }
 
 /*
@@ -124,7 +115,6 @@ NativeAppEventEmitter.addListener("nodejs-mobile-react-native-message",
 
 const export_object = {
   start: start,
-  startWithArgs: startWithArgs,
   startWithScript: startWithScript,
   // channel: eventChannel
 };
