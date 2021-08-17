@@ -155,22 +155,25 @@ public class RNNodeJsMobileModule extends ReactContextBaseJavaModule implements 
     if(!_startedNodeAlready) {
       _startedNodeAlready = true;
 
-      String[] raw = input.split(" ");
+      List<String> params = new ArrayList<String>(Arrays.asList(input.split(" ")));
 
-      String script = raw[0];
+      String absoluteScriptPath = nodeJsProjectPath + "/" + params.get(0);
 
-      String[] args = ArrayUtils.removeElement(raw, script);
+      // Remove script file name from arguments list
+      params.remove(0);
 
-      String[] file = {"node", nodeJsProjectPath + "/" + script}
-      
-      String[] command = ArrayUtils.addAll(file, args);
+      final List<String> command = new ArrayList<String>();
+      command.add("node");
+      command.add(absoluteScriptPath);
+
+      command.addAll(params);
 
       new Thread(new Runnable() {
         @Override
         public void run() {
           waitForInit();
           startNodeWithArguments(
-            command,
+            command.toArray(new String[0]),
             nodeJsProjectPath + ":" + builtinModulesPath,
             true
           );
