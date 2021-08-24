@@ -47,7 +47,7 @@ if [ -f ~/.cargo/env ]; then
   source ~/.cargo/env;
 fi
 # Rebuild modules with right environment
-NODEJS_HEADERS_DIR="$( cd "$PROJECT_DIR" && cd ../node_modules/nodejs-mobile-react-native/ios/libnode/ && pwd )"
+NODEJS_HEADERS_DIR="$( cd "$PROJECT_DIR" && cd ../node_modules/zbayapp-nodejs-mobile-react-native/ios/libnode/ && pwd )"
 pushd $CODESIGNING_FOLDER_PATH/nodejs-project/
 if [ "$PLATFORM_NAME" == "iphoneos" ]
 then
