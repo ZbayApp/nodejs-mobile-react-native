@@ -104,6 +104,7 @@ task CopyNodeProjectAssetsFolder (type:Sync) {
     exclude '**/.*' // files and dirs starting with .
     exclude '**/*.gz' // gzip files will cause errors on aapt when merging assets.
     exclude '**/test'
+    exclude '**/tests'
 }
 
 task GenerateNodeProjectAssetsLists {
