@@ -102,9 +102,7 @@ task CopyNodeProjectAssetsFolder (type:Sync) {
     into "${rootProject.buildDir}/nodejs-assets/nodejs-project/"
     exclude '**/*~' // temporary files
     exclude '**/.*' // files and dirs starting with .
-    exclude '**/*.gz' // gzip files will cause errors on aapt when merging assets.
-    exclude '**/test'
-    exclude '**/tests'
+    exclude '**/*.gz' // gzip files will cause errors on aapt when merging assets
 }
 
 task GenerateNodeProjectAssetsLists {
